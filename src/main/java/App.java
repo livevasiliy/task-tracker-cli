@@ -1,15 +1,13 @@
 import Command.AbstractCommand;
+import Command.ArgumentParser;
 import Repository.Task.Json.JsonTaskRepository;
 import Repository.Task.Json.JsonTaskRepositoryImpl;
 import Resolver.CommandResolver;
 
+import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class App {
-    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
-
     public static void main(String[] args) {
 
         try (Scanner scanner = new Scanner(System.in)) {
@@ -37,9 +35,15 @@ public class App {
                     continue;
                 }
 
-                String commandName = parts[0];
-                String[] commandArgs = new String[parts.length - 1];
-                System.arraycopy(parts, 1, commandArgs, 0, commandArgs.length);
+                // Парсим аргументы
+                List<String> parsedArgs = ArgumentParser.parseArguments(input);
+                if (parsedArgs.isEmpty()) {
+                    System.out.println("Please enter a valid command.");
+                    continue;
+                }
+
+                String commandName = parsedArgs.getFirst();
+                String[] commandArgs = parsedArgs.subList(1, parsedArgs.size()).toArray(new String[0]);
 
                 // Разрешение и выполнение команды
                 try {
@@ -50,7 +54,7 @@ public class App {
                 }
             }
         } catch (Exception exception) {
-            LOGGER.log(Level.SEVERE, "An unexpected error occurred", exception);
+            System.out.println("An unexpected error occurred: " + exception.getMessage());
         } finally {
             System.out.println("Goodbye!");
         }

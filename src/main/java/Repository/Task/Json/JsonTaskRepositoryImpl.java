@@ -136,7 +136,7 @@ public final class JsonTaskRepositoryImpl implements JsonTaskRepository {
                         task.getDescription(),
                         task.getStatus(),
                         task.getCreatedAt().getTime(),
-                        task.getUpdatedAt() != null ? task.getUpdatedAt().getTime() : "null"
+                        task.getUpdatedAt() != null ? task.getUpdatedAt().getTime() : null
                 ));
                 if (i < tasks.size() - 1) {
                     writer.write(",");
